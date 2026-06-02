@@ -2,7 +2,11 @@
 -- 设备管理 + 库房库位 SQL 迁移脚本
 -- 日期: 2026-06-02
 -- 对应任务: 大任务一 - 4.1 资源分配管理
+-- 目标数据库: mes_db
 -- ----------------------------
+
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for sp_equipment
@@ -22,23 +26,6 @@ CREATE TABLE `sp_equipment`  (
   `is_deleted` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '逻辑删除：1 表示删除，0 表示未删除，2 表示禁用',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '设备表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- 菜单项：设备管理（二级：常规管理 > 设备管理）
--- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('16', 'equipment', '设备管理', '#', '1', '2', 5, '0', 'user:add', 'fa fa-cogs', '', NOW(), 'admin', NOW(), 'admin');
-
--- ----------------------------
--- 菜单项：设备维护（三级：设备管理 > 设备维护）
--- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('161', 'equipmentDef', '设备维护', '/basedata/equipment/list-ui', '16', '3', 1, '0', 'user:add', 'fa fa-wrench', '', NOW(), 'admin', NOW(), 'admin');
-
--- ----------------------------
--- 字典数据：设备状态
--- ----------------------------
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000001', '正常', 'NORMAL', 'equipment_status', '设备状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000002', '维修中', 'REPAIR', 'equipment_status', '设备状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000003', '已报废', 'SCRAPPED', 'equipment_status', '设备状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- Table structure for sp_warehouse
@@ -75,14 +62,31 @@ CREATE TABLE `sp_warehouse_location`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '库位表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- 菜单项：库房管理（三级：常规管理 > 物料管理 > 库房维护）
+-- 菜单项：设备管理（二级：常规管理 > 设备管理）id=18，id=16已被在制品管理占用
+-- ----------------------------
+INSERT INTO `sp_sys_menu` VALUES ('18', 'equipment', '设备管理', '#', '1', '2', 5, '0', 'user:add', 'fa fa-cogs', '', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 菜单项：设备维护（三级：设备管理 > 设备维护）id=181
+-- ----------------------------
+INSERT INTO `sp_sys_menu` VALUES ('181', 'equipmentDef', '设备维护', '/basedata/equipment/list-ui', '18', '3', 1, '0', 'user:add', 'fa fa-wrench', '', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 菜单项：库房维护（三级：常规管理 > 物料管理 > 库房维护）id=132
 -- ----------------------------
 INSERT INTO `sp_sys_menu` VALUES ('132', 'warehouseDef', '库房维护', '/basedata/warehouse/list-ui', '13', '3', 2, '0', 'user:add', 'fa fa-building', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
--- 菜单项：库位管理（三级：常规管理 > 物料管理 > 库位维护）
+-- 菜单项：库位维护（三级：常规管理 > 物料管理 > 库位维护）id=133
 -- ----------------------------
 INSERT INTO `sp_sys_menu` VALUES ('133', 'locationDef', '库位维护', '/basedata/warehouseLocation/list-ui', '13', '3', 3, '0', 'user:add', 'fa fa-th-large', '', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 字典数据：设备状态
+-- ----------------------------
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000001', '正常', 'NORMAL', 'equipment_status', '设备状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000002', '维修中', 'REPAIR', 'equipment_status', '设备状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000003', '已报废', 'SCRAPPED', 'equipment_status', '设备状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 字典数据：库房类型
@@ -97,3 +101,5 @@ INSERT INTO `sp_sys_dict` VALUES ('1337619000000006', '成品库', 'FINISHED', '
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000007', '空闲', 'IDLE', 'location_status', '库位状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000008', '占用', 'OCCUPIED', 'location_status', '库位状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000009', '禁用', 'DISABLED', 'location_status', '库位状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+
+SET FOREIGN_KEY_CHECKS = 1;

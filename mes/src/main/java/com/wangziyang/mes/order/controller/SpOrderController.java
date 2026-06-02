@@ -139,7 +139,7 @@ public class SpOrderController extends BaseController {
                 map.put("desc", "计划数量：");
                 value.put("from", "/Date(" + System.currentTimeMillis() + ")/");
                 value.put("to", "/Date(" + (System.currentTimeMillis() + 2000000000) + ")/");
-                value.put("label", "黑科除湿器");
+                value.put("label", "除湿器");
                 value.put("desc", "完工进度100%");
                 value.put("customClass", "ganttGreen");
                 value.put("dataObj", "1");

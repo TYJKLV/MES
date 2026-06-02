@@ -61,7 +61,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         homeInfo.put("url", "admin/welcome-ui");
 
         Map<String, String> logoInfo = new HashMap<>(4);
-        logoInfo.put("name", "黑科制造MES");
+        logoInfo.put("name", "MES系统");
         logoInfo.put("image", "/image/logo.png");
         logoInfo.put("url", "");
 

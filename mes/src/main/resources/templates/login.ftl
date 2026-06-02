@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>黑科-MES系统</title>
+    <title>MES系统</title>
     <meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
@@ -114,10 +114,7 @@
         <div class="layui-form login-form">
             <form class="layui-form" action="">
                 <div class="layui-form-item logo-title">
-                    <h1>黑科开源免费-MES系统</h1>
-                    <div class="layui-anim layui-anim-rotate">
-                        <a href='https://gitee.com/wangziyangyang/MES-Springboot'><img src='https://gitee.com/wangziyangyang/MES-Springboot/widgets/widget_3.svg?color=170317' alt='Fork me on Gitee'></img></a>
-                    </div>
+                    <h1>MES系统</h1>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-icon layui-icon-username" for="username"></label>

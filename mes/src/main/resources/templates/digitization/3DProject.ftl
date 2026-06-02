@@ -3,7 +3,7 @@
 <head includeDefault="true">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>黑科3D数字仿真</title>
+    <title>3D数字仿真</title>
     <style>
         body {
             margin: 0;
@@ -379,8 +379,8 @@
         pieChart2 = echarts.init($("<canvas width='512' height='512'></canvas>")[0]);
         option2 = {
             title: {
-                text: '黑科数字仿真数据',
-                subtext: '黑科MES数据',
+                text: '数字仿真数据',
+                subtext: 'MES数据',
                 x: 'center'
             },
             tooltip: {

@@ -29,7 +29,7 @@
     <div class="loadbox"><img src="${request.contextPath}/picture/loading.gif"> 页面加载中...</div>
 </div>
 <div class="head">
-    <h1>黑科智慧大屏</h1>
+    <h1>智慧大屏</h1>
     <div class="weather"><span id="showTime"></span></div>
 
     <script>

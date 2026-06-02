@@ -39,3 +39,61 @@ INSERT INTO `sp_sys_menu` VALUES ('161', 'equipmentDef', '设备维护', '/based
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000001', '正常', 'NORMAL', 'equipment_status', '设备状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000002', '维修中', 'REPAIR', 'equipment_status', '设备状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000003', '已报废', 'SCRAPPED', 'equipment_status', '设备状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- Table structure for sp_warehouse
+-- ----------------------------
+DROP TABLE IF EXISTS `sp_warehouse`;
+CREATE TABLE `sp_warehouse`  (
+  `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主键id',
+  `code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '库房编码',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '库房名称',
+  `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '库房类型（原材料/半成品/成品）',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
+  `update_time` datetime(0) NOT NULL COMMENT '最后更新时间',
+  `update_username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '最后更新人',
+  `is_deleted` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '逻辑删除：1 表示删除，0 表示未删除，2 表示禁用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '库房表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for sp_warehouse_location
+-- ----------------------------
+DROP TABLE IF EXISTS `sp_warehouse_location`;
+CREATE TABLE `sp_warehouse_location`  (
+  `id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '主键id',
+  `code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '库位编码',
+  `warehouse_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '所属库房ID',
+  `status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '库位状态',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `create_username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '创建人',
+  `update_time` datetime(0) NOT NULL COMMENT '最后更新时间',
+  `update_username` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '最后更新人',
+  `is_deleted` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '逻辑删除：1 表示删除，0 表示未删除，2 表示禁用',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '库位表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- 菜单项：库房管理（三级：常规管理 > 物料管理 > 库房维护）
+-- ----------------------------
+INSERT INTO `sp_sys_menu` VALUES ('132', 'warehouseDef', '库房维护', '/basedata/warehouse/list-ui', '13', '3', 2, '0', 'user:add', 'fa fa-building', '', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 菜单项：库位管理（三级：常规管理 > 物料管理 > 库位维护）
+-- ----------------------------
+INSERT INTO `sp_sys_menu` VALUES ('133', 'locationDef', '库位维护', '/basedata/warehouseLocation/list-ui', '13', '3', 3, '0', 'user:add', 'fa fa-th-large', '', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 字典数据：库房类型
+-- ----------------------------
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000004', '原材料库', 'RAW', 'warehouse_type', '库房类型', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000005', '半成品库', 'SEMI', 'warehouse_type', '库房类型', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000006', '成品库', 'FINISHED', 'warehouse_type', '库房类型', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+
+-- ----------------------------
+-- 字典数据：库位状态
+-- ----------------------------
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000007', '空闲', 'IDLE', 'location_status', '库位状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000008', '占用', 'OCCUPIED', 'location_status', '库位状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_dict` VALUES ('1337619000000009', '禁用', 'DISABLED', 'location_status', '库位状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');

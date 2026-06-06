@@ -27,6 +27,20 @@ public class SysDepartment extends BaseEntity {
      */
     private String isDeleted;
 
+    /**
+     * 父部门名称（非数据库字段，仅用于列表展示）
+     */
+    @TableField(exist = false)
+    private String parentName;
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
     public String getParentId() {
         return parentId;
     }

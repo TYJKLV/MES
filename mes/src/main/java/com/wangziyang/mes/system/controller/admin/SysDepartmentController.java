@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class SysDepartmentController extends BaseController {
                     .distinct()
                     .collect(Collectors.toList());
             if (!parentIds.isEmpty()) {
-                List<SysDepartment> parents = sysDepartmentService.listByIds(parentIds);
+                Collection<SysDepartment> parents = sysDepartmentService.listByIds(parentIds);
                 Map<String, String> nameMap = parents.stream()
                         .collect(Collectors.toMap(SysDepartment::getId, SysDepartment::getName));
                 for (SysDepartment dept : result.getRecords()) {

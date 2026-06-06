@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>系统角色列表</title>
+    <title>物料管理列表</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -15,15 +15,23 @@
         <form id="js-search-form" class="layui-form" lay-filter="js-q-form-filter">
             <div class="layui-form-item">
                 <div class="layui-inline">
-                    <label class="layui-form-label">物料编号</label>
+                    <label class="layui-form-label">物料编码</label>
                     <div class="layui-input-inline">
-                        <input type="materiel" name="materiel" autocomplete="off" class="layui-input">
+                        <input type="text" name="materielLike" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
-                    <label class="layui-form-label">物料名称</label>
+                    <label class="layui-form-label">物料描述</label>
                     <div class="layui-input-inline">
-                        <input type="materielDesc" name="materielDesc" autocomplete="off" class="layui-input">
+                        <input type="text" name="materielDescLike" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">物料类型</label>
+                    <div class="layui-input-inline">
+                        <select id="js-matType" name="matType" lay-filter="matType-filter">
+                            <option value="">全部</option>
+                        </select>
                     </div>
                 </div>
                 <div class="layui-inline">
@@ -64,6 +72,9 @@
             spLayer = layui.spLayer,
             spTable = layui.spTable;
 
+        // 初始化物料类型下拉框
+        getMatTypeData();
+
         // 表格及数据初始化
         var tableIns = spTable.render({
             url: '${request.contextPath}/basedata/materile/page',
@@ -75,13 +86,20 @@
                 }, {
                     field: 'materielDesc', title: '物料描述'
                 }, {
+                    field: 'matType', title: '物料类型', templet: function (d) {
+                        if (d.matType === 'RM') return '原材料';
+                        if (d.matType === 'PG') return '半成品';
+                        if (d.matType === 'FG') return '成品';
+                        return d.matType;
+                    }
+                }, {
                     field: 'productGroup', title: '产品组'
                 }, {
                     field: 'size', title: '尺寸'
                 }, {
-                    field: 'flowDesc', title: '流程描述'
-                }, {
                     field: 'model', title: '型号'
+                }, {
+                    field: 'flowDesc', title: '流程描述'
                 }, {
                     field: 'deleted', title: '状态', templet: function (d) {
                         return spConfig.isDeletedDict[d.deleted];
@@ -108,6 +126,24 @@
         });
 
         /**
+         * 初始化物料类型数据
+         */
+        function getMatTypeData() {
+            spUtil.ajax({
+                url: '${request.contextPath}/basedata/dict/list/material_type',
+                async: false,
+                type: 'GET',
+                data: {},
+                success: function (data) {
+                    $.each(data.data, function (index, item) {
+                        $('#js-matType').append(new Option(item.name, item.value));
+                    });
+                }
+            });
+            form.render('select', 'js-q-form-filter');
+        }
+
+        /**
          * 搜索按钮事件
          */
         form.on('submit(js-search-filter)', function (data) {
@@ -131,11 +167,25 @@
 
             // 批量删除
             if (obj.event === 'deleteBatch') {
-                var checkStatus = table.checkStatus('record-table'),
+                var checkStatus = table.checkStatus('js-record-table'),
                     data = checkStatus.data;
                 if (data.length > 0) {
-                    layer.confirm('确认要删除吗？', function (index) {
-
+                    layer.confirm('确认要删除选中的 ' + data.length + ' 条记录吗？', function (index) {
+                        var ids = [];
+                        $.each(data, function (i, item) {
+                            ids.push(item.id);
+                        });
+                        spUtil.ajax({
+                            url: '${request.contextPath}/basedata/materile/batch-delete',
+                            type: 'POST',
+                            showLoading: true,
+                            serializable: true,
+                            data: {ids: ids.join(',')},
+                            success: function () {
+                                tableIns.reload();
+                                layer.close(index);
+                            }
+                        });
                     });
                 } else {
                     layer.msg("请先选择需要删除的数据！");

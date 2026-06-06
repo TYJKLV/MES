@@ -32,6 +32,7 @@
                         </label>
                         <div class="layui-input-inline">
                             <input type="text" id="js-materiel" name="materiel" lay-verify="required" autocomplete="off"
+                                   placeholder="一物一码，不可重复"
                                    class="layui-input" value="${result.materiel}">
                         </div>
                     </div>

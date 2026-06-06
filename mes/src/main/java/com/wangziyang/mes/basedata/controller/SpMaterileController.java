@@ -1,7 +1,6 @@
 package com.wangziyang.mes.basedata.controller;
 
 
-import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangziyang.mes.basedata.entity.SpMaterile;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -103,6 +103,10 @@ public class SpMaterileController extends BaseController {
         {
             queryWrapper.like("materiel_desc",req.getMaterielDescLike());
         }
+        if (StringUtils.isNotEmpty(req.getMatType()))
+        {
+            queryWrapper.eq("mat_type",req.getMatType());
+        }
         IPage result = iSpMaterileService.page(req,queryWrapper);
         return Result.success(result);
     }
@@ -117,7 +121,17 @@ public class SpMaterileController extends BaseController {
     @PostMapping("/add-or-update")
     @ResponseBody
     public Result addOrUpdate(SpMaterile record) {
-        if (StrUtil.isNotBlank(record.getFlowId())) {
+        // 物料编码唯一性校验
+        QueryWrapper<SpMaterile> checkWrapper = new QueryWrapper<>();
+        checkWrapper.eq("materiel", record.getMateriel());
+        if (StringUtils.isNotEmpty(record.getId())) {
+            checkWrapper.ne("id", record.getId());
+        }
+        List<SpMaterile> existList = iSpMaterileService.list(checkWrapper);
+        if (!existList.isEmpty()) {
+            return Result.failure("物料编码 [" + record.getMateriel() + "] 已存在，请使用唯一编码");
+        }
+        if (StringUtils.isNotEmpty(record.getFlowId())) {
             SpFlow spflow = iSpFlowService.getById(record.getFlowId());
             if (Objects.nonNull(spflow)) {
                 record.setFlowDesc(spflow.getFlowDesc());
@@ -140,6 +154,26 @@ public class SpMaterileController extends BaseController {
     @ResponseBody
     public Result deleteByTableNameId(SpMaterile req) throws Exception {
         iSpMaterileService.removeById(req.getId());
+        return Result.success();
+    }
+
+    /**
+     * 批量删除物料信息
+     *
+     * @param ids 主键ID，逗号分隔
+     * @return Result 执行结果
+     */
+    @ApiOperation("批量删除物料信息")
+    @PostMapping("/batch-delete")
+    @ResponseBody
+    public Result batchDelete(String ids) throws Exception {
+        if (StringUtils.isEmpty(ids)) {
+            return Result.failure("请选择要删除的记录");
+        }
+        String[] idArr = ids.split(",");
+        for (String id : idArr) {
+            iSpMaterileService.removeById(id.trim());
+        }
         return Result.success();
     }
 }

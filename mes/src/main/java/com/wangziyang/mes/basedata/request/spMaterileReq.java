@@ -15,6 +15,10 @@ public class spMaterileReq  extends BasePageReq {
      *模糊查询物料描述
      */
     private String materielDescLike;
+    /**
+     *物料类型精确匹配
+     */
+    private String matType;
 
     /**
      * 获取 模糊查询物料编号
@@ -50,5 +54,23 @@ public class spMaterileReq  extends BasePageReq {
      */
     public void setMaterielDescLike(String materielDescLike) {
         this.materielDescLike = materielDescLike;
+    }
+
+    /**
+     * 获取 物料类型
+     *
+     * @return matType 物料类型
+     */
+    public String getMatType() {
+        return this.matType;
+    }
+
+    /**
+     * 设置 物料类型
+     *
+     * @param matType 物料类型
+     */
+    public void setMatType(String matType) {
+        this.matType = matType;
     }
 }

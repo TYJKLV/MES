@@ -179,7 +179,7 @@
                             url: '${request.contextPath}/basedata/materile/batch-delete',
                             type: 'POST',
                             showLoading: true,
-                            serializable: true,
+                            serializable: false,
                             data: {ids: ids.join(',')},
                             success: function () {
                                 tableIns.reload();

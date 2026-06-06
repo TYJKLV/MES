@@ -67,4 +67,10 @@ INSERT INTO `sp_team_user_rel` VALUES ('1340000000000011', '1340000000000001', '
 INSERT INTO `sp_team_user_rel` VALUES ('1340000000000012', '1340000000000001', '1184010472443396098', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_team_user_rel` VALUES ('1340000000000013', '1340000000000002', '1184010472443396098', NOW(), 'admin', NOW(), 'admin');
 
+-- ----------------------------
+-- 角色-菜单绑定：管理员可访问班组管理
+-- ----------------------------
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000025', '1185025876737396738', '19', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000026', '1185025876737396738', '191', NOW(), 'admin', NOW(), 'admin');
+
 SET FOREIGN_KEY_CHECKS = 1;

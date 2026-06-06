@@ -102,4 +102,12 @@ INSERT INTO `sp_sys_dict` VALUES ('1337619000000007', '空闲', 'IDLE', 'locatio
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000008', '占用', 'OCCUPIED', 'location_status', '库位状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 INSERT INTO `sp_sys_dict` VALUES ('1337619000000009', '禁用', 'DISABLED', 'location_status', '库位状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
+-- ----------------------------
+-- 角色-菜单绑定：管理员可访问设备管理/库房库位
+-- ----------------------------
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000021', '1185025876737396738', '18', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000022', '1185025876737396738', '181', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000023', '1185025876737396738', '132', NOW(), 'admin', NOW(), 'admin');
+INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000024', '1185025876737396738', '133', NOW(), 'admin', NOW(), 'admin');
+
 SET FOREIGN_KEY_CHECKS = 1;

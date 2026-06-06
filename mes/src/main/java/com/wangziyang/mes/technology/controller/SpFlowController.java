@@ -65,6 +65,17 @@ public class SpFlowController extends BaseController {
         return Result.success(list);
     }
 
+    /** 供物料管理等模块下拉框使用，返回完整字段（含 process 用于流程时序图） */
+    @GetMapping("/list")
+    @ResponseBody
+    public Result list() {
+        QueryWrapper<SpFlow> qw = new QueryWrapper<>();
+        qw.eq("is_deleted", "0");
+        qw.orderByAsc("flow");
+        List<SpFlow> list = iSpFlowService.list(qw);
+        return Result.success(list);
+    }
+
     @PostMapping("/add-or-update")
     @ResponseBody
     public Result addOrUpdate(SpFlow record) {

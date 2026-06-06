@@ -161,7 +161,7 @@
          */
         function getFlowData() {
             spUtil.ajax({
-                url: '${request.contextPath}/basedata/flow/list',
+                url: '${request.contextPath}/technology/flow/list',
                 async: false,
                 type: 'GET',
                 // 是否显示 loading

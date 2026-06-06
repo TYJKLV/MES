@@ -52,6 +52,7 @@
 
 <!--行操作模板-->
 <script type="text/html" id="js-record-table-toolbar-right">
+    <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="permission"><i class="layui-icon layui-icon-auz"></i>权限</a>
     <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete"><i class="layui-icon layui-icon-delete"></i>删除</a>
 </script>
@@ -86,7 +87,7 @@
                     title: '操作',
                     toolbar: '#js-record-table-toolbar-right',
                     unresize: true,
-                    width: 150
+                    width: 210
                 }]
             ],
             done: function (res, curr, count) {
@@ -125,11 +126,25 @@
 
             // 批量删除
             if (obj.event === 'deleteBatch') {
-                var checkStatus = table.checkStatus('record-table'),
+                var checkStatus = table.checkStatus('js-record-table'),
                     data = checkStatus.data;
                 if (data.length > 0) {
-                    layer.confirm('确认要删除吗？', function (index) {
-
+                    layer.confirm('确认要删除选中的 ' + data.length + ' 条记录吗？', function (index) {
+                        var ids = [];
+                        $.each(data, function (i, item) {
+                            ids.push(item.id);
+                        });
+                        spUtil.ajax({
+                            url: '${request.contextPath}/admin/sys/role/batch-delete',
+                            type: 'POST',
+                            showLoading: true,
+                            serializable: false,
+                            data: {ids: ids.join(',')},
+                            success: function () {
+                                tableIns.reload();
+                                layer.close(index);
+                            }
+                        });
                     });
                 } else {
                     layer.msg("请先选择需要删除的数据！");
@@ -138,9 +153,9 @@
 
             // 添加
             if (obj.event === 'add') {
-                var index = spLayer.open({
+                spLayer.open({
                     title: '添加',
-                    area: ['90%', '90%'],
+                    area: ['800px', '400px'],
                     content: '${request.contextPath}/admin/sys/role/add-or-update-ui'
                 });
             }
@@ -151,6 +166,16 @@
          */
         table.on('tool(js-record-table-filter)', function (obj) {
             var data = obj.data;
+
+            // 权限分配
+            if (obj.event === 'permission') {
+                spLayer.open({
+                    title: '权限分配 - ' + data.name,
+                    area: ['500px', '600px'],
+                    spWhere: {roleId: data.id},
+                    content: '${request.contextPath}/admin/sys/role/permission-ui'
+                });
+            }
 
             // 编辑
             if (obj.event === 'edit') {
@@ -166,8 +191,16 @@
             // 删除
             if (obj.event === 'delete') {
                 layer.confirm('确认要删除吗？', function (index) {
-                    obj.del();
-                    layer.close(index);
+                    spUtil.ajax({
+                        url: '${request.contextPath}/admin/sys/role/delete',
+                        type: 'POST',
+                        serializable: false,
+                        data: {id: data.id},
+                        success: function () {
+                            tableIns.reload();
+                            layer.close(index);
+                        }
+                    });
                 });
             }
         });

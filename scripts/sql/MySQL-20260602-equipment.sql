@@ -64,50 +64,50 @@ CREATE TABLE `sp_warehouse_location`  (
 -- ----------------------------
 -- 菜单项：设备管理（二级：常规管理 > 设备管理）id=18，id=16已被在制品管理占用
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('18', 'equipment', '设备管理', '#', '1', '2', 5, '0', 'user:add', 'fa fa-cogs', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('18', 'equipment', '设备管理', '#', '1', '2', 5, '0', 'user:add', 'fa fa-cogs', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 菜单项：设备维护（三级：设备管理 > 设备维护）id=181
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('181', 'equipmentDef', '设备维护', '/basedata/equipment/list-ui', '18', '3', 1, '0', 'user:add', 'fa fa-wrench', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('181', 'equipmentDef', '设备维护', '/basedata/equipment/list-ui', '18', '3', 1, '0', 'user:add', 'fa fa-wrench', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 菜单项：库房维护（三级：常规管理 > 物料管理 > 库房维护）id=132
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('132', 'warehouseDef', '库房维护', '/basedata/warehouse/list-ui', '13', '3', 2, '0', 'user:add', 'fa fa-building', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('132', 'warehouseDef', '库房维护', '/basedata/warehouse/list-ui', '13', '3', 2, '0', 'user:add', 'fa fa-building', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 菜单项：库位维护（三级：常规管理 > 物料管理 > 库位维护）id=133
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('133', 'locationDef', '库位维护', '/basedata/warehouseLocation/list-ui', '13', '3', 3, '0', 'user:add', 'fa fa-th-large', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('133', 'locationDef', '库位维护', '/basedata/warehouseLocation/list-ui', '13', '3', 3, '0', 'user:add', 'fa fa-th-large', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 字典数据：设备状态
 -- ----------------------------
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000001', '正常', 'NORMAL', 'equipment_status', '设备状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000002', '维修中', 'REPAIR', 'equipment_status', '设备状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000003', '已报废', 'SCRAPPED', 'equipment_status', '设备状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000001', '正常', 'NORMAL', 'equipment_status', '设备状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000002', '维修中', 'REPAIR', 'equipment_status', '设备状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000003', '已报废', 'SCRAPPED', 'equipment_status', '设备状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 字典数据：库房类型
 -- ----------------------------
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000004', '原材料库', 'RAW', 'warehouse_type', '库房类型', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000005', '半成品库', 'SEMI', 'warehouse_type', '库房类型', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000006', '成品库', 'FINISHED', 'warehouse_type', '库房类型', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000004', '原材料库', 'RAW', 'warehouse_type', '库房类型', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000005', '半成品库', 'SEMI', 'warehouse_type', '库房类型', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000006', '成品库', 'FINISHED', 'warehouse_type', '库房类型', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 字典数据：库位状态
 -- ----------------------------
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000007', '空闲', 'IDLE', 'location_status', '库位状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000008', '占用', 'OCCUPIED', 'location_status', '库位状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000009', '禁用', 'DISABLED', 'location_status', '库位状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000007', '空闲', 'IDLE', 'location_status', '库位状态', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000008', '占用', 'OCCUPIED', 'location_status', '库位状态', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000009', '禁用', 'DISABLED', 'location_status', '库位状态', 3, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 角色-菜单绑定：管理员可访问设备管理/库房库位
 -- ----------------------------
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000021', '1185025876737396738', '18', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000022', '1185025876737396738', '181', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000023', '1185025876737396738', '132', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000024', '1185025876737396738', '133', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000021', '1185025876737396738', '18', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000022', '1185025876737396738', '181', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000023', '1185025876737396738', '132', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000024', '1185025876737396738', '133', NOW(), 'admin', NOW(), 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;

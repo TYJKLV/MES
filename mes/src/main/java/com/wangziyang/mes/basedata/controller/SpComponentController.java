@@ -86,7 +86,7 @@ public class SpComponentController extends BaseController {
     @ResponseBody
     public Result materielList() {
         QueryWrapper<SpMaterile> qw = new QueryWrapper<>();
-        qw.eq("is_deleted", "01");
+        qw.eq("is_deleted", "0");  // sp_materile 实际数据用 '0' 表示正常
         qw.select("id", "materiel", "materiel_desc");
         List<SpMaterile> list = spMaterileService.list(qw);
         return Result.success(list);

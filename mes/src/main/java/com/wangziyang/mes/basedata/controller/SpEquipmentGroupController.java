@@ -89,7 +89,7 @@ public class SpEquipmentGroupController extends BaseController {
     @ResponseBody
     public Result equipmentList() {
         QueryWrapper<SpEquipment> qw = new QueryWrapper<>();
-        qw.eq("is_deleted", "01");
+        qw.eq("is_deleted", "0");  // sp_equipment 表用 '0' 表示正常（与老表 '01' 不同）
         qw.select("id", "code", "name");
         List<SpEquipment> list = spEquipmentService.list(qw);
         return Result.success(list);

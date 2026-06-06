@@ -81,7 +81,7 @@
         var tableIns = spTable.render({
             url: '${request.contextPath}/technology/bom/page',
             cols: [[
-                {type: 'radio'},
+                {type: 'checkbox'},
                 {field: 'bomCode', title: 'BOM编号'},
                 {field: 'materielCode', title: '物料编号'},
                 {field: 'materielDesc', title: '物料名称'},

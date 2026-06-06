@@ -47,16 +47,18 @@ CREATE TABLE `sp_team_user_rel` (
 -- ----------------------------
 -- 菜单项：班组管理（二级：常规管理 > 班组管理）id=19
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('19', 'team', '班组管理', '#', '1', '2', 6, '0', 'user:add', 'fa fa-users', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('19', 'team', '班组管理', '#', '1', '2', 6, '0', 'user:add', 'fa fa-users', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 菜单项：班组维护（三级：班组管理 > 班组维护）id=191
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('191', 'teamDef', '班组维护', '/basedata/team/list-ui', '19', '3', 1, '0', 'user:add', 'fa fa-user-circle', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('191', 'teamDef', '班组维护', '/basedata/team/list-ui', '19', '3', 1, '0', 'user:add', 'fa fa-user-circle', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
--- 测试数据：班组
+-- 测试数据：班组（先清理再插入，保证可重复执行）
 -- ----------------------------
+DELETE FROM `sp_team_user_rel` WHERE `team_id` IN ('1340000000000001', '1340000000000002');
+DELETE FROM `sp_team` WHERE `id` IN ('1340000000000001', '1340000000000002');
 INSERT INTO `sp_team` VALUES ('1340000000000001', 'TEAM-01', '装配一班', '1336866559213600', '1184019107907227649', NOW(), 'admin', NOW(), 'admin', '0');
 INSERT INTO `sp_team` VALUES ('1340000000000002', 'TEAM-02', '测试一班', '1336866559213600', '1184010472443396098', NOW(), 'admin', NOW(), 'admin', '0');
 
@@ -70,7 +72,7 @@ INSERT INTO `sp_team_user_rel` VALUES ('1340000000000013', '1340000000000002', '
 -- ----------------------------
 -- 角色-菜单绑定：管理员可访问班组管理
 -- ----------------------------
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000025', '1185025876737396738', '19', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000026', '1185025876737396738', '191', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000025', '1185025876737396738', '19', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000026', '1185025876737396738', '191', NOW(), 'admin', NOW(), 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;

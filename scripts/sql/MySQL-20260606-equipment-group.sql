@@ -47,22 +47,28 @@ CREATE TABLE `sp_equipment_group_rel` (
 -- ----------------------------
 -- 菜单项：设备编组维护（三级：常规管理 > 设备管理 > 设备编组维护）id=182
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('182', 'equipmentGroupDef', '设备编组维护', '/basedata/equipmentGroup/list-ui', '18', '3', 2, '0', 'user:add', 'fa fa-object-group', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('182', 'equipmentGroupDef', '设备编组维护', '/basedata/equipmentGroup/list-ui', '18', '3', 2, '0', 'user:add', 'fa fa-object-group', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 字典数据：设备编组类型
+-- 注意：ID 使用 1337619000000020/21，避免与 materile-enhance.sql 的 1337619000000010 冲突
 -- ----------------------------
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000010', '静态编组', 'static', 'equipment_group_type', '设备编组类型', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_dict` VALUES ('1337619000000011', '动态编组', 'dynamic', 'equipment_group_type', '设备编组类型', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+-- 清理旧ID（如果之前用错误ID执行过）
+DELETE FROM `sp_sys_dict` WHERE `id` IN ('1337619000000010', '1337619000000011') AND `type` = 'equipment_group_type';
+-- 插入新ID
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000020', '静态编组', 'static', 'equipment_group_type', '设备编组类型', 1, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_dict` VALUES ('1337619000000021', '动态编组', 'dynamic', 'equipment_group_type', '设备编组类型', 2, '\"\"', '0', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 角色-菜单绑定：管理员可访问设备编组维护
 -- ----------------------------
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000027', '1185025876737396738', '182', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000027', '1185025876737396738', '182', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
--- 测试数据：设备编组
+-- 测试数据：设备编组（先清理再插入，保证可重复执行）
 -- ----------------------------
+DELETE FROM `sp_equipment_group_rel` WHERE `group_id` IN ('1350000000000001', '1350000000000002');
+DELETE FROM `sp_equipment_group` WHERE `id` IN ('1350000000000001', '1350000000000002');
 INSERT INTO `sp_equipment_group` VALUES ('1350000000000001', 'GRP-01', '装配线设备组', 'static', NOW(), 'admin', NOW(), 'admin', '0');
 INSERT INTO `sp_equipment_group` VALUES ('1350000000000002', 'GRP-02', '动态调度设备池', 'dynamic', NOW(), 'admin', NOW(), 'admin', '0');
 

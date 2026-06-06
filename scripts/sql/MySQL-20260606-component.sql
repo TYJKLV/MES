@@ -33,17 +33,17 @@ CREATE TABLE `sp_component` (
 -- ----------------------------
 -- 菜单项：零部件管理（二级：常规管理 > 零部件管理）id=21
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('21', 'component', '零部件管理', '#', '1', '2', 8, '0', 'user:add', 'fa fa-puzzle-piece', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('21', 'partMgt', '零部件管理', '#', '1', '2', 8, '0', 'user:add', 'fa fa-puzzle-piece', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 菜单项：零部件维护（三级：零部件管理 > 零部件维护）id=211
 -- ----------------------------
-INSERT INTO `sp_sys_menu` VALUES ('211', 'componentDef', '零部件维护', '/basedata/component/list-ui', '21', '3', 1, '0', 'user:add', 'fa fa-cog', '', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_menu` VALUES ('211', 'componentDef', '零部件维护', '/basedata/component/list-ui', '21', '3', 1, '0', 'user:add', 'fa fa-cog', '', NOW(), 'admin', NOW(), 'admin');
 
 -- ----------------------------
 -- 角色-菜单绑定：管理员可访问零部件管理
 -- ----------------------------
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000030', '1185025876737396738', '21', NOW(), 'admin', NOW(), 'admin');
-INSERT INTO `sp_sys_role_menu` VALUES ('1340000000000031', '1185025876737396738', '211', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000030', '1185025876737396738', '21', NOW(), 'admin', NOW(), 'admin');
+INSERT IGNORE INTO `sp_sys_role_menu` VALUES ('1340000000000031', '1185025876737396738', '211', NOW(), 'admin', NOW(), 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;

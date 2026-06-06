@@ -53,6 +53,11 @@ public class SpBomItem extends BaseEntity {
      */
     private String operTyper;
 
+    /**
+     * 父项ID（BOM层级结构），为空表示顶层
+     */
+    private String parentItemId;
+
     public String getBomHeadId() {
         return bomHeadId;
     }
@@ -107,6 +112,14 @@ public class SpBomItem extends BaseEntity {
 
     public void setOperTyper(String operTyper) {
         this.operTyper = operTyper;
+    }
+
+    public String getParentItemId() {
+        return parentItemId;
+    }
+
+    public void setParentItemId(String parentItemId) {
+        this.parentItemId = parentItemId;
     }
 
     @Override

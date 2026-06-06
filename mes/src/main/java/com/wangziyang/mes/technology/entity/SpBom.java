@@ -43,6 +43,11 @@ public class SpBom extends BaseEntity {
     private String versionNumber;
 
     /**
+     * BOM类型：product=产品BOM, process=工艺BOM
+     */
+    private String bomType;
+
+    /**
      * BOM状态 creat创建 pass审核通过
      */
     private String state;
@@ -96,6 +101,14 @@ public class SpBom extends BaseEntity {
 
     public void setVersionNumber(String versionNumber) {
         this.versionNumber = versionNumber;
+    }
+
+    public String getBomType() {
+        return bomType;
+    }
+
+    public void setBomType(String bomType) {
+        this.bomType = bomType;
     }
 
     public String getState() {

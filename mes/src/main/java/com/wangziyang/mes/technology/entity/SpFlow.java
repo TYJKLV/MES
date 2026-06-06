@@ -1,98 +1,46 @@
 package com.wangziyang.mes.technology.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.wangziyang.mes.common.BaseEntity;
 
 /**
- * <p>
- * 流程实体类
- * </p>
- *
- * @author WangZiYang
- * @since 2020-03-14
+ * 流程（工艺路线）实体类
  */
 @TableName(value = "sp_flow")
 public class SpFlow extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 流程
-     */
+    /** 流程编码 */
     private String flow;
 
-    /**
-     * 流程描述
-     */
+    /** 流程描述 */
     private String flowDesc;
 
-    /**
-     * 流程时序绘制 A——>B——>C
-     */
+    /** 流程时序绘制 A→B→C */
     private String process;
 
+    /** 版本号 */
+    private String version;
 
+    /** 状态：creat=创建, pass=已定版 */
+    private String state;
 
-    @Override
-    public String toString() {
-        return "SpFlow{" +
-            "flow=" + flow +
-            ", flowDesc=" + flowDesc +
-            ", process=" + process +
-        "}";
-    }
+    /** 状态(0:正常;1:删除;2:禁用) */
+    @TableField(value = "is_deleted")
+    private String deleted;
 
-    /**
-     * 获取 流程
-     *
-     * @return flow 流程
-     */
-    public String getFlow() {
-        return this.flow;
-    }
-
-    /**
-     * 设置 流程
-     *
-     * @param flow 流程
-     */
-    public void setFlow(String flow) {
-        this.flow = flow;
-    }
-
-    /**
-     * 获取 流程描述
-     *
-     * @return flowDesc 流程描述
-     */
-    public String getFlowDesc() {
-        return this.flowDesc;
-    }
-
-    /**
-     * 设置 流程描述
-     *
-     * @param flowDesc 流程描述
-     */
-    public void setFlowDesc(String flowDesc) {
-        this.flowDesc = flowDesc;
-    }
-
-    /**
-     * 获取 流程时序绘制 A——>B——>C
-     *
-     * @return process 流程时序绘制 A——>B——>C
-     */
-    public String getProcess() {
-        return this.process;
-    }
-
-    /**
-     * 设置 流程时序绘制 A——>B——>C
-     *
-     * @param process 流程时序绘制 A——>B——>C
-     */
-    public void setProcess(String process) {
-        this.process = process;
-    }
+    public String getFlow() { return flow; }
+    public void setFlow(String flow) { this.flow = flow; }
+    public String getFlowDesc() { return flowDesc; }
+    public void setFlowDesc(String flowDesc) { this.flowDesc = flowDesc; }
+    public String getProcess() { return process; }
+    public void setProcess(String process) { this.process = process; }
+    public String getVersion() { return version; }
+    public void setVersion(String version) { this.version = version; }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+    public String getDeleted() { return deleted; }
+    public void setDeleted(String deleted) { this.deleted = deleted; }
 }

@@ -13,23 +13,26 @@ public class SpBomReq extends BasePageReq {
     /**
      * 物料模糊查询
      */
-    private  String materielCodeLike ;
+    private String materielCodeLike;
 
     /**
-     * 获取 物料模糊查询
-     *
-     * @return materielCodeLike 物料模糊查询
+     * BOM类型精确匹配：product/process
      */
+    private String bomType;
+
     public String getMaterielCodeLike() {
         return this.materielCodeLike;
     }
 
-    /**
-     * 设置 物料模糊查询
-     *
-     * @param materielCodeLike 物料模糊查询
-     */
     public void setMaterielCodeLike(String materielCodeLike) {
         this.materielCodeLike = materielCodeLike;
+    }
+
+    public String getBomType() {
+        return bomType;
+    }
+
+    public void setBomType(String bomType) {
+        this.bomType = bomType;
     }
 }

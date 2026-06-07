@@ -259,7 +259,7 @@ function addPlane(x,z,width,length,scene) {
 function addArea(x,z,width,length,scene,name,textColor,font_size,textposition) {
     addPlane(x,z,width,length,scene);
 
-    new THREE.FontLoader().load('./ThreeJs/FZYaoTi_Regular.json',function(font){
+    new THREE.FontLoader().load('/lib/ThreeJs/FZYaoTi_Regular.json',function(font){
         ////加入立体文字
         var text= new THREE.TextGeometry(name.split("$")[1],{
             // 设定文字字体

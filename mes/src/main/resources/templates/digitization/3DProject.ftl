@@ -63,6 +63,7 @@
     var matArrayA = []; //内墙
     var matArrayB = []; //外墙
     var group = new THREE.Group();
+    var isPaused = false;
 
     // 初始化场景
     function initScene() {
@@ -320,117 +321,76 @@
         controls.target = new THREE.Vector3(50, 50, 0);
     }
 
-    function initEcharts() {
-        pieChart = echarts.init($("<canvas width='512' height='512'></canvas>")[0]);
-        option = {
+    // 动态生成ECharts（基于实际库房数据）
+    function initEchartsDynamic(warehouses) {
+        // 从实际库房数据中提取名称和库位数
+        var whNames = [];
+        var whLocCounts = [];
+        var pieData = [];
+        if (warehouses && warehouses.length > 0) {
+            for (var i = 0; i < warehouses.length; i++) {
+                var name = warehouses[i].warehouseName || ('库房' + (i + 1));
+                var locCount = (warehouses[i].locations || []).length;
+                whNames.push(name);
+                whLocCounts.push(locCount);
+                pieData.push({value: locCount, name: name});
+            }
+        } else {
+            whNames = ['暂无数据'];
+            whLocCounts = [0];
+            pieData = [{value: 1, name: '暂无数据'}];
+        }
+
+        // 柱状图：各库房库位数量对比
+        var barChart = echarts.init($("<canvas width='512' height='512'></canvas>")[0]);
+        barChart.setOption({
             color: ['#3398DB'],
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    axisTick: {
-                        alignWithLabel: true
-                    }
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: '直接访问',
-                    type: 'bar',
-                    barWidth: '60%',
-                    data: [10, 52, 200, 334, 390, 330, 220]
-                }
-            ]
-        };
-        pieChart.setOption(option);
-
-        pieChart.on('finished', function () {
-            var infoEchart = new THREE.TextureLoader().load(pieChart.getDataURL());
-
-            var infoEchartMaterial = new THREE.MeshBasicMaterial({
-                transparent: true,
-                map: infoEchart,
-                side: THREE.DoubleSide
-            });
-
-            var echartPlane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), infoEchartMaterial);
-            echartPlane.position.set(100, 150, 0);
-            scene.add(echartPlane);
-
+            tooltip: {trigger: 'axis', axisPointer: {type: 'shadow'}},
+            grid: {left: '3%', right: '4%', bottom: '3%', containLabel: true},
+            xAxis: [{type: 'category', data: whNames, axisTick: {alignWithLabel: true}}],
+            yAxis: [{type: 'value', name: '库位数'}],
+            series: [{name: '库位数', type: 'bar', barWidth: '60%', data: whLocCounts}]
         });
 
-        pieChart2 = echarts.init($("<canvas width='512' height='512'></canvas>")[0]);
-        option2 = {
-            title: {
-                text: '数字仿真数据',
-                subtext: 'MES数据',
-                x: 'center'
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-                orient: 'vertical',
-                left: 'left',
-                data: ['库区A-1', '库区A-2', '库区B-1', '库区B-2', '库区C-1']
-            },
-            series: [
-                {
-                    name: '访问来源',
-                    type: 'pie',
-                    radius: '55%',
-                    center: ['50%', '60%'],
-                    data: [
-                        {value: 335, name: '库区A-1'},
-                        {value: 310, name: '库区A-2'},
-                        {value: 234, name: '库区B-1'},
-                        {value: 135, name: '库区B-2'},
-                        {value: 1548, name: '库区C-1'}
-                    ],
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        };
-        pieChart2.setOption(option2);
-
-        pieChart2.on('finished', function () {
-            var spriteMap = new THREE.TextureLoader().load(pieChart2.getDataURL());
-
-            var spriteMaterial = new THREE.SpriteMaterial({
-                transparent: true,
-                map: spriteMap,
-                side: THREE.DoubleSide
+        barChart.on('finished', function () {
+            var barTexture = new THREE.TextureLoader().load(barChart.getDataURL());
+            var barMaterial = new THREE.MeshBasicMaterial({
+                transparent: true, map: barTexture, side: THREE.DoubleSide
             });
+            var barPlane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), barMaterial);
+            // 放在仓库前方墙壁上方，避免与库区重叠
+            barPlane.position.set(200, 180, -685);
+            scene.add(barPlane);
+        });
 
-            var sprite = new THREE.Sprite(spriteMaterial);
-            sprite.scale.set(150, 150, 1)
-            sprite.position.set(-100, 180, 0);
-            scene.add(sprite);
+        // 饼图：各库房库位占比分布
+        var pieChart = echarts.init($("<canvas width='512' height='512'></canvas>")[0]);
+        pieChart.setOption({
+            title: {text: '库房库位分布', subtext: 'MES数据', x: 'center'},
+            tooltip: {trigger: 'item', formatter: "{a} <br/>{b} : {c} ({d}%)"},
+            legend: {orient: 'vertical', left: 'left', data: whNames},
+            series: [{
+                name: '库位分布',
+                type: 'pie',
+                radius: '55%',
+                center: ['50%', '60%'],
+                data: pieData,
+                itemStyle: {
+                    emphasis: {shadowBlur: 10, shadowOffsetX: 0, shadowColor: 'rgba(0, 0, 0, 0.5)'}
+                }
+            }]
+        });
 
+        pieChart.on('finished', function () {
+            var pieTexture = new THREE.TextureLoader().load(pieChart.getDataURL());
+            var pieMaterial = new THREE.SpriteMaterial({
+                transparent: true, map: pieTexture, side: THREE.DoubleSide
+            });
+            var pieSprite = new THREE.Sprite(pieMaterial);
+            pieSprite.scale.set(150, 150, 1);
+            // 放在仓库前方墙壁上方，避免与库区重叠
+            pieSprite.position.set(-200, 180, -685);
+            scene.add(pieSprite);
         });
     }
 
@@ -446,9 +406,8 @@
         initLight();
         initControls();
         initGui();
-        initEcharts();
 
-        // 从数据库加载库房库位数据，动态构建3D场景
+        // 从数据库加载库房库位数据，动态构建3D场景（含ECharts初始化）
         loadWarehouseData();
     }
 
@@ -465,32 +424,40 @@
                 if (warehouses.length === 0) {
                     addArea(0, 0, 1000, 500, scene, "empty$暂无库房数据", "999999", 20, "居中");
                     initPostProcess();
+                    initEchartsDynamic([]);
                     return;
                 }
 
-                var areaWidth = 1000;
-                var areaLength = 500;
-                var areaSpacingZ = 600;
+                // 仓库建筑内部可用空间: x∈[-1250,1250] (宽约2500), z∈[-650,650] (深约1300)
+                // 多库房沿x轴排列（建筑宽度方向），避免穿墙
+                var areaLength = 450;
+                var warehouseCount = warehouses.length;
+                var areaWidth = Math.min(800, 2300 / warehouseCount - 80);
+                var shelfBaseY = GET_HOLDER_HEIGHT()/2 + GET_PLANE_HEIGHT()/2; // 货架底部贴合地板
+
+                var spacingX = 60;
+                var totalWidth = warehouseCount * areaWidth + (warehouseCount - 1) * spacingX;
+                var startX = -totalWidth / 2 + areaWidth / 2;
 
                 for (var w = 0; w < warehouses.length; w++) {
                     var wh = warehouses[w];
-                    var areaZ = w * areaSpacingZ;
+                    var areaX = startX + w * (areaWidth + spacingX);
                     var locs = wh.locations || [];
                     var locCount = locs.length;
 
-                    // 绘制库区
-                    addArea(0, areaZ, areaWidth, areaLength, scene,
-                        wh.warehouseId + "$" + wh.warehouseName, "FF0000", 20, "左对齐");
+                    // 绘制库区（所有库区在同一z平面，沿x轴分布）
+                    addArea(areaX, 0, areaWidth, areaLength, scene,
+                        wh.warehouseId + "$" + wh.warehouseName, "FF0000", 20, "居中");
 
-                    // 为每个库位创建货架配置（x方向居中排列）
+                    // 为每个库位创建货架配置（在库区内x方向居中排列）
                     for (var l = 0; l < locCount; l++) {
                         shelf_list.push({
                             StorageZoneId: wh.warehouseId,
                             shelfId: locs[l].id,
                             shelfName: locs[l].code,
-                            x: l * 100 - (locCount - 1) * 50,
-                            y: 27,
-                            z: areaZ
+                            x: areaX + l * 100 - (locCount - 1) * 50,
+                            y: shelfBaseY,
+                            z: 0
                         });
                     }
                 }
@@ -508,6 +475,7 @@
                 }
 
                 initPostProcess();
+                initEchartsDynamic(warehouses);
             },
             error: function () {
                 addArea(0, 0, 1000, 500, scene, "error$数据加载失败", "FF0000", 20, "居中");
@@ -518,7 +486,7 @@
 
     function initPostProcess() {
         //添加选中时的蒙版
-        composer = new THREE.ThreeJs_Composer(renderer, scene, camera, options);
+        composer = new THREE.ThreeJs_Composer(renderer, scene, camera, options, []);
 
         //添加拖动效果
         var objects = [];

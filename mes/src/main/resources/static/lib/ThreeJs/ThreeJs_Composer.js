@@ -14,6 +14,7 @@
   */
 
 THREE.ThreeJs_Composer = function ( _renderer, _scene, _camera, _options, _selectobject) {
+    _selectobject = _selectobject || [];
     var raycaster = new THREE.Raycaster();
   	var mouse = new THREE.Vector2();
     var composer = new THREE.EffectComposer( _renderer );
@@ -130,15 +131,12 @@ THREE.ThreeJs_Composer = function ( _renderer, _scene, _camera, _options, _selec
 
         var Msg = intersects[0].object.name.split("$");
         if(Msg[0] == "货物") {
-            var href = "DispatchAction.do?efFormEname=YMIQ083DP&inqu_status-0-storageUnitId=" + Msg[1];
-            EFColorbox({
-                href : href,
-                title:"货物详情",
-                innerWidth:'1200px',
-                innerHeight:'800px',
-                iframe : true,
-                scrolling : false,
-                overlayClose: false
+            // 货物详情（预留接口，后续对接库存查询）
+            layer.open({
+                type: 1,
+                title: "货物详情",
+                content: "<div style='padding:20px;'>货物编码: " + Msg[1] + "</div>",
+                area: ['500px', '300px']
             });
         }
     }

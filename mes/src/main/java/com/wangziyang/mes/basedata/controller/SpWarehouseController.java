@@ -4,7 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangziyang.mes.basedata.entity.SpTableManager;
 import com.wangziyang.mes.basedata.entity.SpWarehouse;
+import com.wangziyang.mes.basedata.entity.SpWarehouseLocation;
 import com.wangziyang.mes.basedata.request.SpWarehouseReq;
+import com.wangziyang.mes.basedata.service.ISpWarehouseLocationService;
 import com.wangziyang.mes.basedata.service.ISpWarehouseService;
 import com.wangziyang.mes.common.BaseController;
 import com.wangziyang.mes.common.Result;
@@ -20,7 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -36,6 +41,9 @@ public class SpWarehouseController extends BaseController {
 
     @Autowired
     private ISpWarehouseService iSpWarehouseService;
+
+    @Autowired
+    private ISpWarehouseLocationService iSpWarehouseLocationService;
 
     /**
      * 库房管理界面
@@ -88,6 +96,44 @@ public class SpWarehouseController extends BaseController {
     public Result listAll() {
         List<SpWarehouse> list = iSpWarehouseService.list();
         return Result.success(list);
+    }
+
+    /**
+     * 3D数字仿真数据：库房+库位
+     */
+    @ApiOperation("3D数字仿真库房库位数据")
+    @GetMapping("/3d-data")
+    @ResponseBody
+    public Result get3DData() {
+        // 查询所有有效库房（兼容 is_deleted 单双字符两种约定：排除已删除的）
+        QueryWrapper<SpWarehouse> warehouseQw = new QueryWrapper<>();
+        warehouseQw.notIn("is_deleted", "1", "01");
+        List<SpWarehouse> warehouses = iSpWarehouseService.list(warehouseQw);
+
+        // 查询所有有效库位
+        QueryWrapper<SpWarehouseLocation> locationQw = new QueryWrapper<>();
+        locationQw.notIn("is_deleted", "1", "01");
+        List<SpWarehouseLocation> allLocations = iSpWarehouseLocationService.list(locationQw);
+
+        // 按库房ID分组库位
+        Map<String, List<Map<String, String>>> locationMap = new HashMap<>();
+        for (SpWarehouseLocation loc : allLocations) {
+            locationMap.computeIfAbsent(loc.getWarehouseId(), k -> new ArrayList<>())
+                    .add(Map.of("id", loc.getId(), "code", loc.getCode()));
+        }
+
+        // 组装结果
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (SpWarehouse wh : warehouses) {
+            Map<String, Object> whData = new HashMap<>();
+            whData.put("warehouseId", wh.getId());
+            whData.put("warehouseName", wh.getName());
+            whData.put("warehouseType", wh.getType());
+            whData.put("locations", locationMap.getOrDefault(wh.getId(), new ArrayList<>()));
+            result.add(whData);
+        }
+
+        return Result.success(result);
     }
 
     /**

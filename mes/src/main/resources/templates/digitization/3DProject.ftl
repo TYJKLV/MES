@@ -434,7 +434,7 @@
         });
     }
 
-    // 初始化
+    // 初始化静态场景后，动态加载库房库位数据
     function init() {
         initMat();
         initScene();
@@ -448,25 +448,79 @@
         initGui();
         initEcharts();
 
-        addArea(0, 0, 1000, 500, scene, "ID1$库区1号", "FF0000", 20, "左对齐");
+        // 从数据库加载库房库位数据，动态构建3D场景
+        loadWarehouseData();
+    }
 
-        addShelf(scene);
+    function loadWarehouseData() {
+        $.ajax({
+            url: '${request.contextPath}/basedata/warehouse/3d-data',
+            type: 'GET',
+            success: function (response) {
+                var warehouses = response.data || [];
 
-        //添加货物
-        var shelf_list = GET_SHELF_LIST();
-        for (var i = 1; i <= GET_LAYER_NUM(); i++) {
-            for (var j = 1; j <= GET_COLUMN_NUM(); j++) {
-                for (var k = 1; k <= shelf_list.length; k++) {
-                    addOneUnitCargos(shelf_list[k - 1].shelfId, i, j, scene);
+                // 清空config.js的硬编码数据
+                shelf_list.length = 0;
+
+                if (warehouses.length === 0) {
+                    addArea(0, 0, 1000, 500, scene, "empty$暂无库房数据", "999999", 20, "居中");
+                    initPostProcess();
+                    return;
                 }
-            }
-        }
 
+                var areaWidth = 1000;
+                var areaLength = 500;
+                var areaSpacingZ = 600;
+
+                for (var w = 0; w < warehouses.length; w++) {
+                    var wh = warehouses[w];
+                    var areaZ = w * areaSpacingZ;
+                    var locs = wh.locations || [];
+                    var locCount = locs.length;
+
+                    // 绘制库区
+                    addArea(0, areaZ, areaWidth, areaLength, scene,
+                        wh.warehouseId + "$" + wh.warehouseName, "FF0000", 20, "左对齐");
+
+                    // 为每个库位创建货架配置（x方向居中排列）
+                    for (var l = 0; l < locCount; l++) {
+                        shelf_list.push({
+                            StorageZoneId: wh.warehouseId,
+                            shelfId: locs[l].id,
+                            shelfName: locs[l].code,
+                            x: l * 100 - (locCount - 1) * 50,
+                            y: 27,
+                            z: areaZ
+                        });
+                    }
+                }
+
+                // 渲染货架和货物
+                if (shelf_list.length > 0) {
+                    addShelf(scene);
+                    for (var i = 1; i <= GET_LAYER_NUM(); i++) {
+                        for (var j = 1; j <= GET_COLUMN_NUM(); j++) {
+                            for (var k = 0; k < shelf_list.length; k++) {
+                                addOneUnitCargos(shelf_list[k].shelfId, i, j, scene);
+                            }
+                        }
+                    }
+                }
+
+                initPostProcess();
+            },
+            error: function () {
+                addArea(0, 0, 1000, 500, scene, "error$数据加载失败", "FF0000", 20, "居中");
+                initPostProcess();
+            }
+        });
+    }
+
+    function initPostProcess() {
         //添加选中时的蒙版
         composer = new THREE.ThreeJs_Composer(renderer, scene, camera, options);
 
         //添加拖动效果
-        // 过滤不是 Mesh 的物体,例如辅助网格
         var objects = [];
         for (var i = 0; i < scene.children.length; i++) {
             var Msg = scene.children[i].name.split("$");

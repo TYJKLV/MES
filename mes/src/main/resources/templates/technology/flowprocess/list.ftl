@@ -115,7 +115,7 @@
 
             // 批量删除
             if (obj.event === 'deleteBatch') {
-                var checkStatus = table.checkStatus('record-table'),
+                var checkStatus = table.checkStatus('js-record-table'),
                     data = checkStatus.data;
                 if (data.length > 0) {
                     layer.confirm('确认要删除吗？', function (index) {

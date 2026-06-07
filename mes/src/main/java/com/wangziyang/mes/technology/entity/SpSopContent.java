@@ -1,10 +1,12 @@
 package com.wangziyang.mes.technology.entity;
 
 import com.wangziyang.mes.common.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * SOP内容表
  */
+@TableName("sp_sop_content")
 public class SpSopContent extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

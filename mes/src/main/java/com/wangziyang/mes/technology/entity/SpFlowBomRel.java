@@ -1,10 +1,12 @@
 package com.wangziyang.mes.technology.entity;
 
 import com.wangziyang.mes.common.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 工艺流程-BOM组件绑定关系
  */
+@TableName("sp_flow_bom_rel")
 public class SpFlowBomRel extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

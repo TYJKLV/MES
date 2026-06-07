@@ -87,7 +87,7 @@
         //监听提交
         form.on('submit(js-submit-filter)', function (data) {
             spUtil.submitForm({
-                url: "${request.contextPath}/technology/bom/add-or-update",
+                url: "${request.contextPath}/order/release/add-or-update",
                 data: data.field
             });
             return false;

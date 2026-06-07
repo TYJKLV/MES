@@ -1,11 +1,13 @@
 package com.wangziyang.mes.basedata.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.wangziyang.mes.common.BaseEntity;
 
 /**
  * 零部件实体
  */
+@TableName("sp_component")
 public class SpComponent extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

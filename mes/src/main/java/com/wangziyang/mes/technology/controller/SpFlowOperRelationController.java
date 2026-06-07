@@ -2,6 +2,7 @@ package com.wangziyang.mes.technology.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.wangziyang.mes.basedata.request.SpTableManagerReq;
 import com.wangziyang.mes.common.BaseController;
 import com.wangziyang.mes.common.Result;
@@ -99,8 +100,10 @@ public class SpFlowOperRelationController extends BaseController {
     @PostMapping("/page")
     @ResponseBody
     public Result page(SpTableManagerReq req) {
-        //   IPage result = iSpTableManagerService.page(req);
-        return Result.success();
+        QueryWrapper<SpFlow> qw = new QueryWrapper<>();
+        qw.orderByDesc("update_time");
+        IPage<SpFlow> result = iSpFlowService.page(req, qw);
+        return Result.success(result);
     }
 
 

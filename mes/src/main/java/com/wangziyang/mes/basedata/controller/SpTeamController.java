@@ -101,7 +101,7 @@ public class SpTeamController extends BaseController {
     @ResponseBody
     public Result userList() {
         QueryWrapper<SysUser> qw = new QueryWrapper<>();
-        qw.eq("is_deleted", "1");
+        qw.eq("is_deleted", "0");
         qw.select("id", "name", "username");
         List<SysUser> list = sysUserService.list(qw);
         return Result.success(list);

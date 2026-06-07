@@ -1,10 +1,12 @@
 package com.wangziyang.mes.basedata.entity;
 
 import com.wangziyang.mes.common.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * 班组-员工绑定关系
  */
+@TableName("sp_team_user_rel")
 public class SpTeamUserRel extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

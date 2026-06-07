@@ -1,6 +1,7 @@
 package com.wangziyang.mes.order.entity;
 
 import com.wangziyang.mes.common.BaseEntity;
+import com.baomidou.mybatisplus.annotation.TableName;
 
 /**
  * <p>
@@ -10,6 +11,7 @@ import com.wangziyang.mes.common.BaseEntity;
  * @author WangZiYang
  * @since 2020-07-01
  */
+@TableName("sp_order")
 public class SpOrder extends BaseEntity {
 
     private static final long serialVersionUID = 1L;

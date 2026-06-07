@@ -3,12 +3,11 @@ package com.wangziyang.mes.order.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.wangziyang.mes.basedata.entity.SpMaterile;
 import com.wangziyang.mes.basedata.entity.SpTableManager;
-import com.wangziyang.mes.basedata.request.spMaterileReq;
 import com.wangziyang.mes.common.BaseController;
 import com.wangziyang.mes.common.Result;
 import com.wangziyang.mes.order.entity.SpOrder;
+import com.wangziyang.mes.order.request.SpOrderReq;
 import com.wangziyang.mes.order.service.ISpOrderService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -80,30 +79,29 @@ public class SpOrderController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(name = "req", value = "请求参数", defaultValue = "请求参数")})
     @PostMapping("/page")
     @ResponseBody
-    public Result page(spMaterileReq req) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        if (StringUtils.isNotEmpty(req.getMaterielLike())) {
-            queryWrapper.like("materiel", req.getMaterielLike());
+    public Result page(SpOrderReq req) {
+        QueryWrapper<SpOrder> queryWrapper = new QueryWrapper<>();
+        if (StringUtils.isNotEmpty(req.getOrderCodeLike())) {
+            queryWrapper.like("order_code", req.getOrderCodeLike());
         }
-        if (StringUtils.isNotEmpty(req.getMaterielDescLike())) {
-            queryWrapper.like("materiel_desc", req.getMaterielDescLike());
+        if (StringUtils.isNotEmpty(req.getOrderDescriptionLike())) {
+            queryWrapper.like("order_description", req.getOrderDescriptionLike());
         }
-        IPage result = iSpOrderService.page(req, queryWrapper);
+        IPage<SpOrder> result = iSpOrderService.page(req, queryWrapper);
         return Result.success(result);
     }
 
     /**
      * 生产订单界修改、新增
      *
-     * @param record 物料实体类
+     * @param record 订单实体
      * @return 执行结果
      */
     @ApiOperation("生产订单界修改、新增")
     @PostMapping("/add-or-update")
     @ResponseBody
-    public Result addOrUpdate(SpMaterile record) {
-        SpOrder spOrder = iSpOrderService.getById(record.getFlowId());
-        iSpOrderService.saveOrUpdate(spOrder);
+    public Result addOrUpdate(SpOrder record) {
+        iSpOrderService.saveOrUpdate(record);
         return Result.success();
     }
 
@@ -115,10 +113,10 @@ public class SpOrderController extends BaseController {
      * @return Result 执行结果
      */
     @ApiOperation("删除生产订单界")
-    @ApiImplicitParams({@ApiImplicitParam(name = "req", value = "物料实体", defaultValue = "物料实体")})
+    @ApiImplicitParams({@ApiImplicitParam(name = "req", value = "订单实体", defaultValue = "订单实体")})
     @PostMapping("/delete")
     @ResponseBody
-    public Result deleteByTableNameId(SpMaterile req) throws Exception {
+    public Result delete(SpOrder req) throws Exception {
         iSpOrderService.removeById(req.getId());
         return Result.success();
     }
@@ -126,7 +124,7 @@ public class SpOrderController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/gantt/list", method = RequestMethod.POST, produces = "application/json")
     public Result getListGantt(Map<String, Object> params) throws Exception {
-        //刚特图总数据
+        //甘特图总数据
         List<Map<String, Object>> result = new ArrayList<>();
         //具体的订单信息
         for (int i = 0; i < 20; i++) {

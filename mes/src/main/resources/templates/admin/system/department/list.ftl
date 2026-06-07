@@ -113,9 +113,14 @@
                         }
                         spUtil.ajax({
                             url: '${request.contextPath}/admin/sys/department/batch-delete',
-                            data: {ids: ids.join(',')}
+                            type: 'POST',
+                            serializable: false,
+                            data: {ids: ids.join(',')},
+                            success: function () {
+                                tableIns.reload();
+                                layer.close(index);
+                            }
                         });
-                        layer.close(index);
                     });
                 } else {
                     layer.msg("请先选择需要删除的数据！");
@@ -153,9 +158,14 @@
                 layer.confirm('确认要删除吗？', function (index) {
                     spUtil.ajax({
                         url: '${request.contextPath}/admin/sys/department/delete',
-                        data: {id: data.id}
+                        type: 'POST',
+                        serializable: false,
+                        data: {id: data.id},
+                        success: function () {
+                            tableIns.reload();
+                            layer.close(index);
+                        }
                     });
-                    layer.close(index);
                 });
             }
         });

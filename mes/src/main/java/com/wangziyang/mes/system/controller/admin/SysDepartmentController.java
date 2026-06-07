@@ -59,26 +59,35 @@ public class SysDepartmentController extends BaseController {
         if (StringUtils.isNotEmpty(req.getNameLike())) {
             qw.like("name", req.getNameLike());
         }
+        // 只显示未删除的部门
+        qw.eq("is_deleted", "0");
         qw.orderByAsc("sort_num");
         IPage<SysDepartment> result = sysDepartmentService.page(req, qw);
 
         // 解析父部门名称
         if (result.getRecords() != null && !result.getRecords().isEmpty()) {
+            // 收集所有非根父部门ID
             List<String> parentIds = result.getRecords().stream()
                     .map(SysDepartment::getParentId)
-                    .filter(id -> !"0".equals(id))
+                    .filter(id -> id != null && !"0".equals(id))
                     .distinct()
                     .collect(Collectors.toList());
+
+            Map<String, String> nameMap = new java.util.HashMap<>();
             if (!parentIds.isEmpty()) {
                 Collection<SysDepartment> parents = sysDepartmentService.listByIds(parentIds);
-                Map<String, String> nameMap = parents.stream()
-                        .collect(Collectors.toMap(SysDepartment::getId, SysDepartment::getName));
-                for (SysDepartment dept : result.getRecords()) {
-                    if (!"0".equals(dept.getParentId())) {
-                        dept.setParentName(nameMap.getOrDefault(dept.getParentId(), dept.getParentId()));
-                    } else {
-                        dept.setParentName("顶级部门");
-                    }
+                for (SysDepartment p : parents) {
+                    nameMap.put(p.getId(), p.getName());
+                }
+            }
+
+            // 设置每个部门的父部门名称
+            for (SysDepartment dept : result.getRecords()) {
+                String pid = dept.getParentId();
+                if (pid == null || "0".equals(pid)) {
+                    dept.setParentName("顶级部门");
+                } else {
+                    dept.setParentName(nameMap.getOrDefault(pid, pid));
                 }
             }
         }

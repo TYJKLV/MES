@@ -131,6 +131,45 @@
             return html;
         }
 
+        // 监听checkbox变化，实现父子联动
+        form.on('checkbox(menu-check)', function (data) {
+            var $checkbox = $(data.elem);
+            var $li = $checkbox.parent('li');
+            var isChecked = data.elem.checked;
+
+            // 1. 向下传播：选中/取消所有子节点
+            $li.find('input[name="menuIds"]').each(function () {
+                if (this.checked !== isChecked) {
+                    this.checked = isChecked;
+                }
+            });
+
+            // 2. 向上传播：更新所有祖先节点
+            var $parentUl = $li.parent('ul');
+            while ($parentUl.length > 0) {
+                var $parentLi = $parentUl.closest('li');
+                if ($parentLi.length === 0) break;
+
+                var $parentCb = $parentLi.children('input[name="menuIds"]').first();
+                if ($parentCb.length === 0) break;
+
+                // 检查同级所有兄弟checkbox是否全选中
+                var $siblings = $parentUl.children('li').children('input[name="menuIds"]');
+                var allChecked = true;
+                $siblings.each(function () {
+                    if (!this.checked) {
+                        allChecked = false;
+                        return false;
+                    }
+                });
+                $parentCb[0].checked = allChecked;
+
+                $parentUl = $parentLi.parent('ul');
+            }
+
+            form.render('checkbox', 'perm-form');
+        });
+
         // 监听提交
         form.on('submit(js-submit-filter)', function (data) {
             var checkedIds = [];

@@ -52,14 +52,18 @@
     layui.use(['form', 'table', 'spLayer', 'spTable'], function () {
         var form = layui.form, table = layui.table, spLayer = layui.spLayer, spTable = layui.spTable;
 
+        var deptNameMap = {}, userNameMap = {};
+        spUtil.ajax({ url: '${request.contextPath}/admin/sys/department/list-all', async: false, type: 'GET', success: function (data) { $.each(data.data, function (i, item) { deptNameMap[item.id] = item.name; }); } });
+        spUtil.ajax({ url: '${request.contextPath}/basedata/team/user-list', async: false, type: 'GET', success: function (data) { $.each(data.data, function (i, item) { userNameMap[item.id] = item.name; }); } });
+
         var tableIns = spTable.render({
             url: '${request.contextPath}/basedata/team/page',
             cols: [[
                 {type: 'checkbox'},
                 {field: 'code', title: '班组编码'},
                 {field: 'name', title: '班组名称'},
-                {field: 'deptId', title: '所属部门ID'},
-                {field: 'leaderId', title: '班组长ID'},
+                {field: 'deptId', title: '所属部门', templet: function (d) { return deptNameMap[d.deptId] || d.deptId; }},
+                {field: 'leaderId', title: '班组长', templet: function (d) { return userNameMap[d.leaderId] || d.leaderId; }},
                 {field: 'deleted', title: '状态', templet: function (d) {
                     return spConfig.isDeletedDict[d.deleted];
                 }},

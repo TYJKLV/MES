@@ -66,6 +66,9 @@
             spLayer = layui.spLayer,
             spTable = layui.spTable;
 
+        // 库房 id→name 映射（供表格渲染用）
+        var warehouseNameMap = {};
+
         // 加载库房下拉框
         loadWarehouseSelect();
 
@@ -78,6 +81,7 @@
                 data: {},
                 success: function (data) {
                     $.each(data.data, function (index, item) {
+                        warehouseNameMap[item.id] = item.name;
                         $('#js-warehouseId').append(new Option(item.name, item.id));
                     });
                 }
@@ -94,7 +98,7 @@
                 }, {
                     field: 'code', title: '库位编码'
                 }, {
-                    field: 'warehouseId', title: '所属库房ID'
+                    field: 'warehouseId', title: '所属库房', templet: function (d) { return warehouseNameMap[d.warehouseId] || d.warehouseId; }
                 }, {
                     field: 'status', title: '库位状态'
                 }, {

@@ -118,8 +118,11 @@ public class SpWarehouseController extends BaseController {
         // 按库房ID分组库位
         Map<String, List<Map<String, String>>> locationMap = new HashMap<>();
         for (SpWarehouseLocation loc : allLocations) {
-            locationMap.computeIfAbsent(loc.getWarehouseId(), k -> new ArrayList<>())
-                    .add(Map.of("id", loc.getId(), "code", loc.getCode()));
+            locationMap.computeIfAbsent(loc.getWarehouseId(), k -> new ArrayList<>());
+            Map<String, String> locData = new HashMap<>();
+            locData.put("id", loc.getId());
+            locData.put("code", loc.getCode());
+            locationMap.get(loc.getWarehouseId()).add(locData);
         }
 
         // 组装结果

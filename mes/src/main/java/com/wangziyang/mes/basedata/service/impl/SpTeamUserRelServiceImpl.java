@@ -23,6 +23,18 @@ public class SpTeamUserRelServiceImpl extends ServiceImpl<SpTeamUserRelMapper, S
     }
 
     @Override
+    public void ensureTeamUser(String teamId, String userId) {
+        QueryWrapper<SpTeamUserRel> qw = new QueryWrapper<>();
+        qw.eq("team_id", teamId).eq("user_id", userId);
+        if (this.count(qw) == 0) {
+            SpTeamUserRel rel = new SpTeamUserRel();
+            rel.setTeamId(teamId);
+            rel.setUserId(userId);
+            this.save(rel);
+        }
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void saveTeamUsers(String teamId, List<String> userIds) {
         QueryWrapper<SpTeamUserRel> qw = new QueryWrapper<>();

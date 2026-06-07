@@ -66,6 +66,10 @@ public class SpTeamController extends BaseController {
     @ResponseBody
     public Result addOrUpdate(SpTeam record) {
         spTeamService.saveOrUpdate(record);
+        // 确保班组长自动加入班组员工关系表
+        if (StringUtils.isNotEmpty(record.getLeaderId())) {
+            spTeamUserRelService.ensureTeamUser(record.getId(), record.getLeaderId());
+        }
         return Result.success();
     }
 

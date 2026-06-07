@@ -12,4 +12,7 @@ public interface ISpTeamUserRelService extends IService<SpTeamUserRel> {
 
     /** 保存班组-员工绑定（先删后增） */
     void saveTeamUsers(String teamId, List<String> userIds);
+
+    /** 确保某用户已加入班组（如不存在则新增，用于班组长自动同步） */
+    void ensureTeamUser(String teamId, String userId);
 }
